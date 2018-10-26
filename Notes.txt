@@ -1,0 +1,59 @@
+grep '^-' 'Identity and access management on AWS hack session.txt'
+grep '^-' Notes.txt
+
+- Log into my aws console
+
+https://us-west-1.console.aws.amazon.com/console/home?region=us-west-1#
+
+- Enable multi factor authentication for aws console access
+- Manually create a root user and group
+- Find an official image with the aws cli - failed
+
+https://github.com/aws/aws-cli/issues/3553
+
+- Do a hack session in an alpine container
+- Restore a container that has been stopped
+
+docker restart
+docker exec
+docker stop
+
+   6 apk update
+   7 apk upgrade
+  11 apk add python
+  13 apk add py-pip
+  15 pip install awscli
+  23 mkdir /root/.aws
+  24 vi /root/.aws/credentials
+  26 aws iam list-users
+  25 aws iam list-users --query Users[].UserName
+
+- Build a docker image with the awscli
+
+docker build --tag mbigras/awscli .
+
+- Load credentials from lastpass - failed
+
+lpass add --notes aws/root-credentials
+lpass show --notes aws/root-credentials
+creds=$(mktemp)
+lpass show --notes aws/root-credentials > $creds
+docker run -v $creds:/root/.aws/credentials mbigras/awscli aws iam list-users
+docker: Error response from daemon: Mounts denied:
+The path /var/folders/lc/yd0_7m_n4n99yp7tnx_525qr0000gn/T/tmp.gxUr7Ucp
+is not shared from OS X and is not known to Docker.
+You can configure shared paths from Docker -> Preferences... -> File Sharing.
+See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for more info.
+.
+ERRO[0000] error waiting for container: context canceled
+
+- Configure Docker to be able to access macOS temporary files
+
+manually update File Sharing settings to include /var/folders
+
+todo: figure out where the docker configuration files are instead of making GUI configuration changes
+
+- Load credentials from lastpass
+
+docker run -v $creds:/root/.aws/credentials mbigras/awscli aws iam list-users
+docker run -v $creds:/root/.aws/credentials mbigras/awscli aws iam list-users | jq -r '.Users[] | .UserName'
