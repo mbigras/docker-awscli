@@ -1,4 +1,4 @@
-grep '^-' 'Identity and access management on AWS hack session.txt'
+grep '^-' 'Build a docker image with the awscli.txt'
 grep '^-' Notes.txt
 
 - Log into my aws console
@@ -57,3 +57,9 @@ todo: figure out where the docker configuration files are instead of making GUI 
 
 docker run -v $creds:/root/.aws/credentials mbigras/awscli aws iam list-users
 docker run -v $creds:/root/.aws/credentials mbigras/awscli aws iam list-users | jq -r '.Users[] | .UserName'
+
+- Print some help - failed
+
+aws help
+
+Could not find executable named "groff"
