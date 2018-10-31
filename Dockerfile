@@ -6,3 +6,4 @@ RUN apk update \
 		py-pip \
 		python \
 			&& pip install awscli
+WORKDIR /root
